@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@media (hover: hover) {
+  .close-btn {
+    display: hidden;
+  }
+  .card-main:hover .close-btn {
+    display: block !important;
+  }
+}
