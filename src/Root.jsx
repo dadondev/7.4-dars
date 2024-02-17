@@ -13,7 +13,7 @@ const router = createBrowserRouter([
   {
     path: "",
     element: (
-      <div className="h-full grid grid-cols-[1fr_10fr] md:grid-cols-[2fr_7fr]">
+      <div className="h-full grid grid-cols-[250px_10fr] overflow-hidden md:grid-cols-[250px_7fr]">
         <Sidebar />
         <Main />
       </div>
