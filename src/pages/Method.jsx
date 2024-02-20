@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import appSlice from "../redux/appSlice";
-import SyntaxHighlighter from "react-syntax-highlighter";
-import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { dracula, docco } from "react-syntax-highlighter/dist/cjs/styles/hljs";
 const Method = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -19,10 +19,24 @@ const Method = () => {
     }
   };
   const getApi = async () => {
-    const req = await fetch(api);
+    const req = await fetch(api, {
+      method: oneRequest.type,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(document.getElementById("body")?.value),
+    });
     const res = await req.json();
-    setCodes(res);
+    for (const name in res) {
+      if (res[name]) {
+        str += `${name}: ${
+          typeof res[name] != "object" ? res[name] : "array"
+        } \n`;
+      }
+    }
+    setCodes(str ? str : null);
   };
+  const Code = ({ language, children }) => (
+    <SyntaxHighlighter language={language}>{children}</SyntaxHighlighter>
+  );
   return (
     <div className="h-full grid grid-rows-[3fr_5fr] overflow-hidden">
       <div className="w-full p-2 md:px-10 md:py-6 grid grid-rows-[1fr_3fr] gap-10">
@@ -47,6 +61,7 @@ const Method = () => {
           {oneRequest.type != "get" ? (
             <textarea
               type="text"
+              id="body"
               className="border-[2px] border-sky-500 outline-none p-2 h-full  w-full"
             />
           ) : (
@@ -56,9 +71,7 @@ const Method = () => {
       </div>
       <div>
         <div className="max-w-[940px] mx-auto h-full">
-          <SyntaxHighlighter language="javascript" style={docco}>
-            {codes && codes + ""}
-          </SyntaxHighlighter>
+          <Code language={"javascript"}>{codes}</Code>
         </div>
       </div>
     </div>
